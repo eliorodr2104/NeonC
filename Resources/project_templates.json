@@ -1,0 +1,71 @@
+[
+    {
+        "id": "executable",
+        "title": "Executable",
+        "icon": "apple.terminal.on.rectangle",
+        "creationModalities": [
+            {
+                "id": "c-exe",
+                "title": "C Executable",
+                "icon": "apple.terminal.on.rectangle",
+                "description": "Create a new executable project using C language"
+            },
+            {
+                "id": "cpp-exe",
+                "title": "C++ Executable",
+                "icon": "apple.terminal.on.rectangle",
+                "description": "Create a new executable project using C++ language"
+            },
+            {
+                "id": "cuda-exe",
+                "title": "CUDA Executable",
+                "icon": "apple.terminal.on.rectangle",
+                "description": "Create a new executable project using CUDA language"
+            }
+        ]
+    },
+    {
+        "id": "library",
+        "title": "Library",
+        "icon": "building.columns",
+        "creationModalities": [
+            {
+                "id": "c-lib",
+                "title": "C Library",
+                "icon": "apple.terminal.on.rectangle",
+                "description": "Create a new library using C language"
+            },
+            {
+                "id": "cpp-lib",
+                "title": "C++ Library",
+                "icon": "apple.terminal.on.rectangle",
+                "description": "Create a new library using C++ language"
+            },
+            {
+                "id": "cuda-lib",
+                "title": "CUDA Library",
+                "icon": "apple.terminal.on.rectangle",
+                "description": "Create a new library using CUDA language"
+            }
+        ]
+    },
+    {
+        "id": "gui",
+        "title": "GUI",
+        "icon": "inset.filled.rectangle.and.person.filled",
+        "creationModalities": [
+            {
+                "id": "qt-exe",
+                "title": "Qt Console Executable",
+                "icon": "apple.terminal.on.rectangle",
+                "description": "Create a new program Qt using C/C++ language"
+            },
+            {
+                "id": "qt-widg-exe",
+                "title": "Qt Widget Executable",
+                "icon": "apple.terminal.on.rectangle",
+                "description": "Create a new Qt widget using C/C++ language"
+            }
+        ]
+    }
+]
