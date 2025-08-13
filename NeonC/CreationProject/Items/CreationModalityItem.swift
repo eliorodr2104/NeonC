@@ -3,4 +3,5 @@ struct CreationModalityItem: Identifiable, Hashable, Codable {
     let title: String
     let icon: String
     let description: String
+    let languageProject: LanguageProject
 }

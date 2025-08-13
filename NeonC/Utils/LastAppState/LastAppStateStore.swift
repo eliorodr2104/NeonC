@@ -10,8 +10,7 @@ internal import Combine
 import SwiftUI
 
 class LastAppStateStore: ObservableObject {
-    @Published private(set) var currentState: LastAppState =
-        LastAppState(lastPathOpened: nil)
+    @Published private(set) var currentState: LastAppState = LastAppState(lastPathOpened: nil)
 
     private let fileURL: URL
 

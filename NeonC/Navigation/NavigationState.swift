@@ -11,11 +11,8 @@ import SwiftUI
 
 @MainActor
 final class NavigationState: ObservableObject {
-    @Published var showOpenProjectAlert: Bool   = false
-    @Published var showCreateProject   : Bool   = false
-    @Published var selectedProjectName : String = ""
-    @Published var selectedProjectPath : String = ""
-
+    @Published var navigationItem: NavigationItem = NavigationItem()
+    
     func openProjectPanel() {
         let panel = NSOpenPanel()
         panel.canChooseDirectories = true
@@ -30,27 +27,27 @@ final class NavigationState: ObservableObject {
 
                 DispatchQueue.main.async {
 
-                    if self.selectedProjectPath != url.path || self.selectedProjectName != url.lastPathComponent {
-                        self.selectedProjectPath = url.path
-                        self.selectedProjectName = url.lastPathComponent
-                        self.showOpenProjectAlert = true
+                    if self.navigationItem.selectedProjectPath != url.path || self.navigationItem.selectedProjectName != url.lastPathComponent {
+                        self.navigationItem.selectedProjectPath = url.path
+                        self.navigationItem.selectedProjectName = url.lastPathComponent
+                        self.navigationItem.navigationState = .OPEN_PROJECT
                     }
                 }
             }
         }
     }
 
-    func showCreateProjectPanel() {
-        showCreateProject = true
+    func showCreationProjectSheet() {
+        self.navigationItem.navigationState = .SELECT_TYPE_PROJECT
     }
 
     func closeCreateProjectPanel() {
-        showCreateProject = false
+        self.navigationItem.navigationState = .HOME
     }
 
     func clearSelection() {
-        selectedProjectPath = ""
-        selectedProjectName = ""
+        self.navigationItem.selectedProjectPath = ""
+        self.navigationItem.selectedProjectName = ""
     }
 }
 

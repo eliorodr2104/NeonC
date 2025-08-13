@@ -23,6 +23,7 @@ struct NeonCApp: App {
                 
         }
         .windowStyle(.hiddenTitleBar)
+        
 
         // EDITOR
         WindowGroup(id: "editor") {

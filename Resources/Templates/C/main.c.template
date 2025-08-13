@@ -1,0 +1,11 @@
+#include <stdio.h>
+
+// Entry function
+int main() {
+
+	// This function print in your screen "Hello World!" message
+	printf("Hello World!"); 
+
+	// Good exit for the program
+	return 0;
+}

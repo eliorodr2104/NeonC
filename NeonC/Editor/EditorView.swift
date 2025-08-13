@@ -13,9 +13,7 @@ struct EditorView: View {
     @Environment(\.openWindow) private var openWindow
     @EnvironmentObject         private var appState    : AppState
     @ObservedObject            private var lastStateApp: LastAppStateStore
-    
 
-    
     
     @State private var isRunning: Bool
     
@@ -46,6 +44,7 @@ struct EditorView: View {
             }
             
         }
+        .backgroundExtensionEffect()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onDisappear {
 
@@ -66,26 +65,27 @@ struct EditorView: View {
 
                         Button {
                             withAnimation(.spring()) {
-                                isRunning = true
+                                isRunning.toggle()
                             }
                         } label: {
                             Image(systemName: isRunning ? "play.fill" : "play")
                                 .font(.system(size: 20))
+                            
                         }
                         .frame(width: 40.0, height: 40.0)
-                        .buttonStyle(.glass)
+                        .glassEffect()
 
                         if isRunning {
                             Button {
                                 withAnimation(.spring()) {
-                                    isRunning = false
+                                    isRunning.toggle()
                                 }
                             } label: {
                                 Image(systemName: "stop.fill")
                                     .font(.system(size: 20))
                             }
                             .frame(width: 40.0, height: 40.0)
-                            .buttonStyle(.glass)
+                            .glassEffect()
                             .transition(.move(edge: .leading).combined(with: .opacity))
                         } else {
                             // Placeholder trasparente: mantiene fisso il layout

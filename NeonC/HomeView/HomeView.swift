@@ -3,7 +3,6 @@ import SwiftUI
 struct HomeView: View {
     @ObservedObject var navigationState: NavigationState
     @ObservedObject var recentProjectsStore: RecentProjectsStore
-    
     @ObservedObject var lastStateApp: LastAppStateStore
 
     let defaultsMode: [ModeItem]
@@ -11,6 +10,13 @@ struct HomeView: View {
     private let icon = NSApplication.shared.applicationIconImage!
     @State private var glowColor: Color = .white
     @State private var computedAverage = false
+    
+    private var appVersionString: String {
+        let info = Bundle.main.infoDictionary
+        let version = info?["CFBundleShortVersionString"] as? String ?? "1.0"
+        let build = info?["CFBundleVersion"] as? String ?? "1"
+        return "Version \(version) (\(build))"
+    }
 
     init(navigationState: NavigationState, recentProjectsStore: RecentProjectsStore, lastStateApp: LastAppStateStore) {
         self.navigationState = navigationState
@@ -21,7 +27,7 @@ struct HomeView: View {
                 name: "Create A New Project",
                 description: "Create a new C or C++ project",
                 icon: "plus.app",
-                function: { navigationState.showCreateProjectPanel() }
+                function: { navigationState.showCreationProjectSheet() }
             ),
             ModeItem(
                 name: "Open A Existing Project",
@@ -38,12 +44,6 @@ struct HomeView: View {
         ]
     }
 
-    private var appVersionString: String {
-        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
-        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
-        return "Version \(version) (\(build))"
-    }
-
     var body: some View {
         HStack(spacing: 30) {
 
@@ -56,7 +56,7 @@ struct HomeView: View {
                         .frame(width: 80, height: 80)
                         .shadow(color: glowColor.opacity(0.6), radius: 12, x: 0, y: 0)
                         .onAppear {
-                            // calcola una volta solo
+                            
                             if !computedAverage {
                                 computedAverage = true
                                 computeAverageColor(of: icon) { nsColor in
@@ -88,83 +88,17 @@ struct HomeView: View {
                             .frame(maxWidth: 400)
                     }
                 }
-            }
-            .padding(.leading, 25)
-            .frame(minWidth: 300, maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-
-            // Right: Recent projects custom panel
-            VStack(alignment: .leading, spacing: 0) {
-                HStack {
-                    Image(systemName: "clock")
-                        .font(.title2)
-                        .foregroundStyle(.secondary)
-                    
-                    Text("Recent Projects")
-                        .font(.title2.bold())
-                        .foregroundStyle(.primary)
-                    
-                    Spacer()
-                }
-                .padding(.horizontal)
-                .padding(.top, 20)
-                .padding(.bottom, 5)
-
-                if recentProjectsStore.projects.isEmpty {
-                    Spacer()
-                    
-                } else {
-                    ScrollView {
-                        LazyVStack(spacing: 10) {
-                            ForEach(recentProjectsStore.projects, id: \.id) { project in
-                                
-                                VStack {
-                                    ProjectRow(
-                                        project: project,
-                                        onSelect: {
-                                            navigationState.selectedProjectPath = project.path
-                                            navigationState.selectedProjectName = project.name
-                                            navigationState.showOpenProjectAlert = true
-                                        },
-                                        onDelete: {
-                                            if let idx = recentProjectsStore.projects.firstIndex(where: { $0.id == project.id }) {
-                                                withAnimation {
-                                                    recentProjectsStore.removeProject(at: IndexSet(integer: idx))
-                                                }
-                                            }
-                                        }
-                                    )
-                                    .padding(.horizontal, 8)
-                                    .padding(.vertical, 2)
-                                    
-                                }
-                                
-                            }
-                        }
-                        .padding()
-                    }
-                }
-
-                Divider()
-                    .padding(.vertical, 6)
-                    .padding(.horizontal, 8)
-
+                
                 Text("NeonC • \(appVersionString)")
                     .font(.footnote)
                     .foregroundStyle(.tertiary)
                     .padding(.horizontal, 12)
                     .padding(.bottom, 8)
             }
-            .background(
-                RoundedRectangle(cornerRadius: 24)
-                    .fill(.ultraThinMaterial)
-                    .shadow(color: .black.opacity(0.2), radius: 24, x: 0, y: 8)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 24)
-                            .stroke(Color.white.opacity(0.18), lineWidth: 1)
-                    )
-            )
-            .frame(minWidth: 180, idealWidth: 350, maxWidth: 550, maxHeight: .infinity, alignment: .topLeading)
-            
+            .padding(.leading, 25)
+            .frame(minWidth: 300, maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+
+            RightMenuView(navigationState: navigationState, recentProjectsStore: recentProjectsStore)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding(10)

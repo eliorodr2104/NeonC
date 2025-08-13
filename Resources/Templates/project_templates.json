@@ -7,20 +7,23 @@
             {
                 "id": "c-exe",
                 "title": "C Executable",
-                "icon": "apple.terminal.on.rectangle",
-                "description": "Create a new executable project using C language"
+                "icon": "c",
+                "description": "Create a new executable project using C language",
+                "languageProject": "C_EXE"
             },
             {
                 "id": "cpp-exe",
                 "title": "C++ Executable",
-                "icon": "apple.terminal.on.rectangle",
-                "description": "Create a new executable project using C++ language"
+                "icon": "cpp",
+                "description": "Create a new executable project using C++ language",
+                "languageProject": "CPP_EXE"
             },
             {
                 "id": "cuda-exe",
                 "title": "CUDA Executable",
-                "icon": "apple.terminal.on.rectangle",
-                "description": "Create a new executable project using CUDA language"
+                "icon": "gpu",
+                "description": "Create a new executable project using CUDA language",
+                "languageProject": "CUDA_EXE"
             }
         ]
     },
@@ -33,19 +36,22 @@
                 "id": "c-lib",
                 "title": "C Library",
                 "icon": "apple.terminal.on.rectangle",
-                "description": "Create a new library using C language"
+                "description": "Create a new library using C language",
+                "languageProject": "C_LIB"
             },
             {
                 "id": "cpp-lib",
                 "title": "C++ Library",
                 "icon": "apple.terminal.on.rectangle",
-                "description": "Create a new library using C++ language"
+                "description": "Create a new library using C++ language",
+                "languageProject": "CPP_LIB"
             },
             {
                 "id": "cuda-lib",
                 "title": "CUDA Library",
                 "icon": "apple.terminal.on.rectangle",
-                "description": "Create a new library using CUDA language"
+                "description": "Create a new library using CUDA language",
+                "languageProject": "CUDA_LIB"
             }
         ]
     },
@@ -58,14 +64,17 @@
                 "id": "qt-exe",
                 "title": "Qt Console Executable",
                 "icon": "apple.terminal.on.rectangle",
-                "description": "Create a new program Qt using C/C++ language"
+                "description": "Create a new program Qt using C/C++ language",
+                "languageProject": "QT_EXE"
             },
             {
                 "id": "qt-widg-exe",
                 "title": "Qt Widget Executable",
                 "icon": "apple.terminal.on.rectangle",
-                "description": "Create a new Qt widget using C/C++ language"
+                "description": "Create a new Qt widget using C/C++ language",
+                "languageProject": "QT_WIDG_EXE"
             }
         ]
     }
 ]
+

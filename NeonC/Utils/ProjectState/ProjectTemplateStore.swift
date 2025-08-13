@@ -13,10 +13,10 @@ final class ProjectTemplatesStore: ObservableObject {
     @Published private(set) var templates: [TabCategoryItem] = []
     
     private init() {
-        loadTemplates()
+        loadTabTemplates()
     }
     
-    private func loadTemplates() {
+    private func loadTabTemplates() {
         guard let url = Bundle.main.url(forResource: "project_templates", withExtension: "json") else {
             print("JSON file not found")
             return
