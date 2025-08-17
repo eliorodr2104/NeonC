@@ -1,68 +1,77 @@
-# NeonC
-IDE nativo per C e C++ su macOS (in sviluppo)
+# NeonC — Native C/C++ IDE for macOS (work in progress)
 
-NeonC è un IDE leggero scritto in Swift e SwiftUI, con grafica basata su Liquid Glass, pensato per lo sviluppo in C e C++ su macOS con un’esperienza moderna e perfettamente integrata nel sistema. Il progetto è attualmente in fase attiva di sviluppo: molte funzionalità sono sperimentali o pianificate.
+NeonC is a lightweight C and C++ IDE built with Swift and SwiftUI, featuring a Liquid Glass–based interface. It aims to deliver a modern, fluid experience that’s deeply integrated with macOS and the system toolchain.
 
-> Stato: sperimentale • Base: Liquid Glass • Compatibilità: macOS 26+ • Linguaggio: Swift
+Status: experimental • Base: Liquid Glass • Compatibility: macOS 26+ • Language: Swift
 
-Nota di compatibilità: al momento NeonC è supportato ed è stato testato esclusivamente su macOS 26. Le versioni precedenti non sono supportate per adesso.
-
----
-
-## Perché usare NeonC una volta finito lo sviluppo?
-- Nativo macOS: interfaccia fluida, scorciatoie da tastiera familiari, integrazione con toolchain Apple (clang/LLDB).
-- Focus su C/C++: evidenziazione sintassi, diagnostiche del compilatore e ciclo modifica–compila–esegui semplificato.
-- Leggero e diretto: pensa più a “codice e build” che a configurazioni complesse.
+Compatibility note: NeonC is currently supported and tested only on macOS 26. Earlier versions are not supported at this time.
 
 ---
 
-## Funzionalità
+## Why NeonC (once development matures)
 
-Funzionalità disponibili (baseline):
-- Apertura di cartelle/progetti esistenti.
-- Visualizzazione della modalità editor con view ad albero delle sotto cartelle.
-- Integrazione del toolchain di sistema (Xcode command line, clang/clang++, make, cmake e ninja).
-- Possibilita di creare dei progetti C selezionando anche la versione del linguaggio.
-
-Funzionalità pianificate / in corso:
-- Editor con evidenziazione sintattica per C/C++.
-- Compilazione ed esecuzione da interfaccia (configurazioni minime).
-- Autocompletamento e diagnostiche tramite LSP (clangd).
-- Debug integrato con LLDB (breakpoint, step, watch).
-- Gestione configurazioni di build (Release/Debug, flag personalizzati).
-- Terminale integrato e pannello output.
-- Temi (chiaro/scuro) e personalizzazione font.
-- Modelli di progetto (eseguibile, libreria statica/dinamica, tests).
-- Navigazione simboli, “Go to Definition”, “Find References”.
-- Refactoring di base (rinomina simboli).
-- Supporto a CMake e compilation database.
+- macOS‑native: smooth UI, familiar shortcuts, and tight integration with Apple’s toolchain (clang/LLDB).
+- C/C++ focused: syntax highlighting, compiler diagnostics, and a streamlined edit–build–run loop.
+- Lightweight and straightforward: optimized for “code and build,” with minimal setup.
 
 ---
 
-## Requisiti
+## Features
+
+Available (baseline):
+- Open existing folders/projects.
+- Editor with tree view for subfolders.
+- Integration with the system toolchain (Xcode Command Line Tools, clang/clang++, make, CMake, and Ninja).
+- Create C projects with selectable language version.
+
+Planned / in progress:
+- Syntax highlighting for C/C++.
+- Build and run from the UI (minimal configuration).
+- Autocomplete and diagnostics via LSP (clangd).
+- Integrated debugging with LLDB (breakpoints, stepping, watch).
+- Build configuration management (Release/Debug, custom flags).
+- Integrated terminal and output panel.
+- Themes (light/dark) and font customization.
+- Project templates (executable, static/dynamic library, tests).
+- Symbol navigation, “Go to Definition,” “Find References.”
+- Basic refactoring (rename symbol).
+- CMake and compilation database (compile_commands.json) support.
+
+---
+
+## Requirements
+
 - macOS 26.
-- Xcode 26 installato (per toolchain clang/LLDB e SDK).
-- Xcode Command Line Tools: `xcode-select --install`
+- Xcode 26 installed (for clang/LLDB toolchain and SDK).
+- Xcode Command Line Tools:
+  ```bash
+  xcode-select --install
+  ```
 
 ---
 
-## Installazione da sorgente
+## Build from source
 
-1) Clona il repository:
+1) Clone the repository:
 ```bash
 git clone https://github.com/eliorodr2104/NeonC.git
 cd NeonC
 ```
 
-2) Apri il progetto in Xcode:
-- Cerca e apri il file del progetto (es. `NeonC.xcodeproj` o `NeonC.xcworkspace`) se presente.
-- In alternativa, apri la cartella in Xcode e genera lo schema di build.
+2) Open the project in Xcode:
+- Open `NeonC.xcodeproj` or `NeonC.xcworkspace` if present.
+- Alternatively, open the folder in Xcode and create a build scheme.
 
-4) Compila ed esegui l’app da Xcode (⌘R).
+3) Build & Run from Xcode:
+- Select the app scheme and press ⌘R.
+- Ensure “Signing & Capabilities” are configured if Xcode prompts you.
 
 ---
 
-## Utilizzo (alpha version)
-- Apri una cartella con file C/C++.
-- Crea un progetto C.
-- Apri il progetto e visualizza le cartelle.
+## Usage (alpha)
+
+- Open a folder that contains C/C++ source files.
+- Create a new C project from the app, choosing the desired language version.
+- Open the project and browse files via the tree view.
+
+Note: many features are under active development and may be incomplete or subject to change.
