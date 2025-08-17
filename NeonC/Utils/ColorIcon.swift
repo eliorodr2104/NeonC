@@ -8,7 +8,7 @@
 import AppKit
 
 func computeAverageColor(of nsImage: NSImage, completion: @escaping (NSColor?) -> Void) {
-    DispatchQueue.global(qos: .userInitiated).async {
+    DispatchQueue.global(qos: .utility).async {
         guard
             let tiff = nsImage.tiffRepresentation,
             let bitmap = NSBitmapImageRep(data: tiff),

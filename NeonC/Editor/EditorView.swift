@@ -8,43 +8,36 @@
 import SwiftUI
 
 struct EditorView: View {
-    let projectPath: String
     
     @Environment(\.openWindow) private var openWindow
     @EnvironmentObject         private var appState    : AppState
+    
     @ObservedObject            private var lastStateApp: LastAppStateStore
+    @ObservedObject            private var navigationState: NavigationState
 
-    
     @State private var isRunning: Bool
-    
-    init(lastStateApp: LastAppStateStore) {
+    @State private var selectedFile: URL?
+
+    init(lastStateApp: LastAppStateStore, navigationState: NavigationState) {
         
-        self.projectPath  = lastStateApp.currentState.lastPathOpened ?? ""
         self.lastStateApp = lastStateApp
         self.isRunning    = false
+        self.navigationState = navigationState
+        
     }
 
     var body: some View {
         
         NavigationSplitView {
-            List {
-                Label("House", systemImage:"house")
-                Label("Documents", systemImage: "doc")
+            DirectoryTreeView(rootURL: URL(fileURLWithPath: self.lastStateApp.currentState.lastPathOpened!)) { url in
+                selectedFile = url
             }
-            .navigationTitle("Sidebar")
             
         } detail: {
-            VStack {
-                Spacer()
-                Text(projectPath)
-                    .font(.title)
-                    .multilineTextAlignment(.center)
-                Spacer()
-                
-            }
+            
+            ContextView(selectedFile: selectedFile)
             
         }
-        .backgroundExtensionEffect()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onDisappear {
 
@@ -57,51 +50,63 @@ struct EditorView: View {
                 openWindow(id: "home")
             }
         }
-
         .toolbar {
-            ToolbarItem {
-                GlassEffectContainer(spacing: 40) {
+            
+            ToolbarItem(placement: .navigation) {
+                GlassEffectContainer(spacing: 35) {
                     HStack(spacing: 7.0) {
 
                         Button {
                             withAnimation(.spring()) {
-                                isRunning.toggle()
+                                isRunning = true
                             }
                         } label: {
                             Image(systemName: isRunning ? "play.fill" : "play")
-                                .font(.system(size: 20))
-                            
+                                .font(.system(size: 17))
                         }
-                        .frame(width: 40.0, height: 40.0)
-                        .glassEffect()
+                        .frame(width: 35.0, height: 35.0)
+                        .glassEffect() 
 
                         if isRunning {
                             Button {
                                 withAnimation(.spring()) {
-                                    isRunning.toggle()
+                                    isRunning = false
                                 }
                             } label: {
                                 Image(systemName: "stop.fill")
-                                    .font(.system(size: 20))
+                                    .font(.system(size: 17))
                             }
-                            .frame(width: 40.0, height: 40.0)
+                            .frame(width: 35.0, height: 35.0)
                             .glassEffect()
                             .transition(.move(edge: .leading).combined(with: .opacity))
+                            
                         } else {
-                            // Placeholder trasparente: mantiene fisso il layout
                             Color.clear
-                                .frame(width: 40.0, height: 40.0)
+                                .frame(width: 35.0, height: 35.0)
                                 .allowsHitTesting(false)
+                            
                         }
                     }
                     .animation(.spring(), value: isRunning)
                 }
             }
             .sharedBackgroundVisibility(.hidden)
+
+            ToolbarItem(placement: .principal) {
+                HStack {
+                    Text(navigationState.navigationItem.selectedProjectName)
+                }
+                .padding()
+            }
+        }
+        .onAppear {
+            self.navigationState.navigationItem.selectedProjectPath = self.lastStateApp.currentState.lastPathOpened!
+            self.navigationState.navigationItem.selectedProjectName = URL(fileURLWithPath: self.navigationState.navigationItem.selectedProjectPath).lastPathComponent
         }
     }
 }
 
 #Preview {
-    EditorView(lastStateApp: LastAppStateStore())
+    EditorView(lastStateApp: LastAppStateStore(), navigationState: NavigationState())
 }
+

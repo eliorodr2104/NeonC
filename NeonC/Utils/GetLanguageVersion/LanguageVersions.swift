@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ClangCompat: Codable {
+struct LanguagePack: Codable {
     struct RangeItem: Codable {
         let min: Int
         let max: Int? 

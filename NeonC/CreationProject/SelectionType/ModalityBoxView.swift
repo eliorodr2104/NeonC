@@ -24,9 +24,9 @@ struct ModalityBoxView: View {
         Button(action: onSelect) {
             
             HStack(alignment: .center, spacing: 12) {
-                Image(currentModality.icon)
-                    .font(.headline)
-                    .foregroundColor(isSelected ? .primary : .accentColor)
+//                Image(currentModality.icon)
+//                    .font(.headline)
+//                    .foregroundColor(isSelected ? .primary : .accentColor)
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(currentModality.title)

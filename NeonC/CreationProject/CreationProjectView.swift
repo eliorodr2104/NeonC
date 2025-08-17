@@ -9,12 +9,19 @@ import SwiftUI
 
 struct CreationProjectView: View {
     @ObservedObject var navigationState: NavigationState
-    @StateObject private var viewModel = CreationProjectViewModel()
+    @ObservedObject var compilerProfile: CompilerProfileStore
     
-    @State private var creating = false
-    @State private var createError: String?
-    
-    @State private var urlProject = URL(string: "")
+    @StateObject private var viewModel: CreationProjectViewModel
+
+    @State private var creating: Bool = false
+    @State private var createError: String? = nil
+    @State private var urlProject: URL? = nil
+
+    init(navigationState: NavigationState, compilerProfile: CompilerProfileStore) {
+        self.navigationState = navigationState
+        self.compilerProfile = compilerProfile
+        _viewModel = StateObject(wrappedValue: CreationProjectViewModel(compilerProfile: compilerProfile))
+    }
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -35,7 +42,6 @@ struct CreationProjectView: View {
                     ForEach(viewModel.languageVersions, id: \.self) { v in
                         Text(v).tag(v)
                     }
-                    
                 }
                 .pickerStyle(PopUpButtonPickerStyle())
                 .disabled(viewModel.languageVersions.isEmpty)
@@ -58,11 +64,9 @@ struct CreationProjectView: View {
                             navigationState.clearSelection()
                             navigationState.navigationItem.selectedProjectPath = path
                             navigationState.navigationItem.selectedProjectName = viewModel.nameProject
-                            navigationState.navigationItem.navigationState = .OPEN_PROJECT
-                            
+                            navigationState.navigationItem.secondaryNavigation = .CONTROL_OPEN_PROJECT
                         }
                     }
-                    
                 }
                 .buttonStyle(.glassProminent)
                 .disabled(creating || viewModel.nameProject.isEmpty || viewModel.locationProject.isEmpty)
@@ -72,28 +76,23 @@ struct CreationProjectView: View {
         .task {
             await viewModel.load()
         }
-        
     }
     
     private func createAction() async {
         creating = true
         defer { creating = false }
         do {
-            
             // Get the current language project to create
             let kind = mapProjectKind(from: navigationState)
-            
             // Create and get the project
             urlProject = try await viewModel.createProject(kind: kind)
-
         } catch {
             createError = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
-            
         }
     }
 
     private func mapProjectKind(from navigationState: NavigationState) -> ProjectKind {
-        switch navigationState.navigationItem.currentLanguage {
+        switch navigationState.navigationItem.currentLanguageProject {
             case .C_EXE:     return .cExe
             case .C_LIB:     return .cLib
             case .CPP_EXE:   return .cppExe
@@ -102,3 +101,4 @@ struct CreationProjectView: View {
         }
     }
 }
+

@@ -30,7 +30,8 @@ final class NavigationState: ObservableObject {
                     if self.navigationItem.selectedProjectPath != url.path || self.navigationItem.selectedProjectName != url.lastPathComponent {
                         self.navigationItem.selectedProjectPath = url.path
                         self.navigationItem.selectedProjectName = url.lastPathComponent
-                        self.navigationItem.navigationState = .OPEN_PROJECT
+                        
+                        self.navigationItem.secondaryNavigation = .CONTROL_OPEN_PROJECT
                     }
                 }
             }
@@ -38,11 +39,11 @@ final class NavigationState: ObservableObject {
     }
 
     func showCreationProjectSheet() {
-        self.navigationItem.navigationState = .SELECT_TYPE_PROJECT
+        self.navigationItem.secondaryNavigation = .SELECT_TYPE_PROJECT
     }
 
     func closeCreateProjectPanel() {
-        self.navigationItem.navigationState = .HOME
+        self.navigationItem.secondaryNavigation = nil
     }
 
     func clearSelection() {

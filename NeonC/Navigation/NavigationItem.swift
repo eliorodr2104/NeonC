@@ -6,8 +6,11 @@
 //
 
 struct NavigationItem: Hashable {
-    var navigationState: NavigationEnum = .HOME
-    var currentLanguage: LanguageProject = .C_EXE
+    var principalNavigation: NavigationEnum = .HOME
+    var secondaryNavigation: SecondaryNavigationEnum? = nil
+    
+    var currentLanguageProject: LanguageProject = .C_EXE
+    
     var selectedProjectName: String = ""
     var selectedProjectPath: String = ""
 }

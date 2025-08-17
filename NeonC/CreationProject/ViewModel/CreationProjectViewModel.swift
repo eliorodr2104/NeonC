@@ -31,8 +31,8 @@ final class CreationProjectViewModel: ObservableObject {
 
     private let standards: StandardsProvider
 
-    init(standards: StandardsProvider? = nil) {
-        self.standards = standards ?? ClangStandardsProvider.shared
+    init(standards: StandardsProvider? = nil, compilerProfile: CompilerProfileStore) {
+        self.standards = standards ?? LanguageStandardsProvider(compilerProfile: compilerProfile)
         try? ensureBaseDirExists()
     }
 

@@ -12,8 +12,9 @@ struct ContentView: View {
     
     @ObservedObject var navigationState: NavigationState
     @ObservedObject var lastStateApp: LastAppStateStore
+    @ObservedObject var compilerProfile: CompilerProfileStore
     
-    @StateObject private var recentProjectsStore = RecentProjectsStore()
+    @ObservedObject var recentProjectsStore: RecentProjectsStore
         
     @EnvironmentObject private var appState: AppState
     @Environment(\.openWindow) private var openWindow
@@ -22,7 +23,7 @@ struct ContentView: View {
     private var isCreateProjectPresented: Binding<Bool> {
         Binding(
             get: {
-                navigationState.navigationItem.navigationState == .SELECT_TYPE_PROJECT || navigationState.navigationItem.navigationState == .CREATE_PROJECT
+                navigationState.navigationItem.secondaryNavigation == .SELECT_TYPE_PROJECT || navigationState.navigationItem.secondaryNavigation == .CREATE_PROJECT
             },
             set: { newValue in
                 if !newValue {
@@ -35,73 +36,96 @@ struct ContentView: View {
     private var isOpenProjectAlertPresented: Binding<Bool> {
         Binding(
             get: {
-                navigationState.navigationItem.navigationState == .OPEN_PROJECT
+                navigationState.navigationItem.secondaryNavigation == .CONTROL_OPEN_PROJECT
             },
             set: { newValue in
                 if !newValue {
-                    navigationState.navigationItem.navigationState = .HOME
+                    navigationState.navigationItem.secondaryNavigation = nil
                 }
             }
         )
     }
     
     var body: some View {
-        
-        HomeView(
-            navigationState: navigationState,
-            recentProjectsStore: recentProjectsStore,
-            lastStateApp: lastStateApp
-        )
-        .sheet(isPresented: isCreateProjectPresented) {
-            
-            if navigationState.navigationItem.navigationState == .SELECT_TYPE_PROJECT {
-                SelectTypeProjectView(navigationState: navigationState)
-                    .frame(width: 600, height: 400)
-            }
-            
-            if navigationState.navigationItem.navigationState == .CREATE_PROJECT {
-                CreationProjectView(navigationState: navigationState)
-                    .frame(width: 600, height: 400)
+        Group {
+            switch navigationState.navigationItem.principalNavigation {
+            case .HOME:
+                HomeView(
+                    navigationState: navigationState,
+                    recentProjectsStore: recentProjectsStore,
+                    lastStateApp: lastStateApp
+                )
+                .onAppear {
+                    if compilerProfile.isEmpty() {
+                        navigationState.navigationItem.principalNavigation = .WELCOME_APP
+                    }
+                }
+                .sheet(isPresented: isCreateProjectPresented) {
+                    switch navigationState.navigationItem.secondaryNavigation {
+                        
+                        case .SELECT_TYPE_PROJECT:
+                            SelectTypeProjectView(navigationState: navigationState)
+                                .frame(width: 600, height: 400)
+                            
+                        case .CREATE_PROJECT:
+                            CreationProjectView(navigationState: navigationState, compilerProfile: compilerProfile)
+                                .frame(width: 600, height: 400)
+                        
+                        default:
+                            EmptyView()
+                    }
+                }
 
+                .alert(
+                    "Open Project '\(navigationState.navigationItem.selectedProjectName)'",
+                    isPresented: isOpenProjectAlertPresented,
+                    actions: {
+                        Button("No", role: .cancel) {
+                            navigationState.navigationItem.selectedProjectPath = ""
+                            navigationState.navigationItem.secondaryNavigation = nil
+                        }
+                        .buttonStyle(.glass)
+                        
+                        Button("Yes") {
+                            let path = navigationState.navigationItem.selectedProjectPath
+                            let name = navigationState.navigationItem.selectedProjectName
+
+                            withTransaction(Transaction(animation: nil)) {
+                                appState.setEditorProjectPath(path)
+                                recentProjectsStore.addProject(name: name, path: path)
+                                lastStateApp.changeState(path: path)
+                            }
+
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                                openWindow(id: "editor")
+
+                                DispatchQueue.main.async {
+                                    navigationState.navigationItem.selectedProjectPath = ""
+                                    navigationState.navigationItem.selectedProjectName = ""
+                                    
+                                    dismiss()
+                                }
+                            }
+                        }
+                        .buttonStyle(.glass)
+
+                    }
+                    
+                )
+            case .WELCOME_APP:
+                WelcomeView(navigationState: navigationState)
+                
+            case .SET_PATHS_APP:
+                SelectPathView(compilerProfile: compilerProfile, navigationState: navigationState)
+                
             }
         }
-        .alert(
-            "Open Project '\(navigationState.navigationItem.selectedProjectName)'",
-            isPresented: isOpenProjectAlertPresented,
-            actions: {
-                Button("No", role: .cancel) {
-                    navigationState.navigationItem.selectedProjectPath = ""
-                }
-                .buttonStyle(.glass)
-                
-                Button("Yes") {
-                    let path = navigationState.navigationItem.selectedProjectPath
-                    let name = navigationState.navigationItem.selectedProjectName
-
-                    withTransaction(Transaction(animation: nil)) {
-                        appState.setEditorProjectPath(path)
-                        recentProjectsStore.addProject(name: name, path: path)
-                        lastStateApp.changeState(path: path)
-                    }
-
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-                        openWindow(id: "editor")
-
-                        DispatchQueue.main.async {
-                            navigationState.navigationItem.selectedProjectPath = ""
-                            navigationState.navigationItem.selectedProjectName = ""
-                            navigationState.navigationItem.navigationState = .HOME
-                            dismiss()
-                        }
-                    }
-                }
-                .buttonStyle(.glass)
-
-            }
-        )
+        
     }
+        
 }
 
 #Preview {
-    ContentView(navigationState: NavigationState(), lastStateApp: LastAppStateStore())
+    ContentView(navigationState: NavigationState(), lastStateApp: LastAppStateStore(), compilerProfile: CompilerProfileStore(), recentProjectsStore: RecentProjectsStore())
 }
+

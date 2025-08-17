@@ -46,7 +46,8 @@ struct RightMenuView: View {
        
         navigationState.navigationItem.selectedProjectPath = project.path
         navigationState.navigationItem.selectedProjectName = project.name
-        navigationState.navigationItem.navigationState = .OPEN_PROJECT
+        
+        navigationState.navigationItem.secondaryNavigation = .CONTROL_OPEN_PROJECT
     }
     
     private func handleProjectDeletion(_ project: RecentProject) {

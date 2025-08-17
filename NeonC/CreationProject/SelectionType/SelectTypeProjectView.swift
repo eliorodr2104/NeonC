@@ -8,15 +8,9 @@
 import SwiftUI
 
 struct SelectTypeProjectView: View {
-    @State private var selectedTabIndex: Int
+    @State private var selectedTabIndex: Int = 0
     @ObservedObject var navigationState: NavigationState
     @State private var currentLanguage: LanguageProject?
-    
-    init(navigationState: NavigationState) {
-        self.selectedTabIndex = 0
-        self.navigationState = navigationState
-        self._currentLanguage = State(initialValue: navigationState.navigationItem.currentLanguage)
-    }
     
     var body: some View {
         let tabCategoriesProjects = ProjectTemplatesStore.shared.templates
@@ -42,7 +36,9 @@ struct SelectTypeProjectView: View {
             
             HStack {
                 Button("Cancel") {
-                    currentLanguage = navigationState.navigationItem.currentLanguage
+                    // Restore selection to initial value and close
+                    currentLanguage = navigationState.navigationItem.currentLanguageProject
+                    // Only request close, let parent dismiss
                     navigationState.closeCreateProjectPanel()
                 }
                 .buttonStyle(.glass)
@@ -51,8 +47,8 @@ struct SelectTypeProjectView: View {
                 
                 Button("Next") {
                     if let lang = currentLanguage {
-                        navigationState.navigationItem.currentLanguage = lang
-                        navigationState.navigationItem.navigationState = .CREATE_PROJECT
+                        navigationState.navigationItem.currentLanguageProject = lang
+                        navigationState.navigationItem.secondaryNavigation = .CREATE_PROJECT
                     }
                 }
                 .disabled(currentLanguage == nil)
@@ -60,13 +56,18 @@ struct SelectTypeProjectView: View {
             }
         }
         .padding()
+        .onAppear {
+            if currentLanguage == nil {
+                currentLanguage = navigationState.navigationItem.currentLanguageProject
+            }
+        }
     }
     
     @ViewBuilder
     private func tabContent(for tab: TabCategoryItem, idx: Int) -> some View {
         if selectedTabIndex == idx {
             VStack(alignment: .leading, spacing: 15) {
-                ForEach(tab.creationModalities, id: \.title) { currentModality in
+                ForEach(tab.creationModalities, id: \.id) { currentModality in
                     ModalityBoxView(
                         currentModality: currentModality,
                         isSelected: currentModality.languageProject == currentLanguage
