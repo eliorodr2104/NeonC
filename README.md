@@ -75,3 +75,12 @@ cd NeonC
 - Open the project and browse files via the tree view.
 
 Note: many features are under active development and may be incomplete or subject to change.
+
+---
+
+[![License: MPL-2.0](https://img.shields.io/badge/License-MPL%202.0-brightgreen.svg)](https://www.mozilla.org/MPL/2.0/)
+
+## License
+The NeonC core is distributed under the Mozilla Public License 2.0 (MPL-2.0).
+
+- See the full text in [LICENSE](LICENSE).
