@@ -1,4 +1,4 @@
-# NeonC — Native C/C++ IDE for macOS (work in progress)
+# NeonC — Native C/C++ IDE for macOS
 
 NeonC is a lightweight C and C++ IDE built with Swift and SwiftUI, featuring a Liquid Glass–based interface. It aims to deliver a modern, fluid experience that’s deeply integrated with macOS and the system toolchain.
 
