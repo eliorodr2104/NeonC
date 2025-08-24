@@ -31,16 +31,12 @@ struct RightMenuView: View {
         .background(backgroundView)
         .frame(minWidth: 350, idealWidth: 350, maxWidth: 550, maxHeight: .infinity, alignment: .topLeading)
     }
-    
-    // MARK: - Subviews ottimizzate
-    
+        
     private var backgroundView: some View {
         RoundedRectangle(cornerRadius: 26)
             .fill(.ultraThinMaterial)
             .shadow(color: .black.opacity(0.2), radius: 24, x: 0, y: 8)
     }
-    
-    // MARK: - Action handlers ottimizzati
     
     private func handleProjectSelection(_ project: RecentProject) {
        

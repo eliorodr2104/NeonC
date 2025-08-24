@@ -19,7 +19,7 @@ struct DirectoryRow: View {
                     withAnimation(.easeInOut(duration: 0.2)) {
                         node.isExpanded.toggle()
                         
-                        if node.isExpanded { node.loadChildren() }
+                        if node.isExpanded { node.loadChildrenPreservingState(async: true, forceReload: false) }
                         
                     }
                     
@@ -70,9 +70,7 @@ struct DirectoryRow: View {
             if node.isDirectory && node.isExpanded {
                 ForEach(node.children) { child in
                     DirectoryRow(node: child, level: level + 1, onOpenFile: onOpenFile)
-                                        
                 }
-                
             }
         }
     }

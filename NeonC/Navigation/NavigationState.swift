@@ -11,10 +11,24 @@ import SwiftUI
 
 @MainActor
 final class NavigationState: ObservableObject {
-    @Published var navigationItem: NavigationItem = NavigationItem()
+    private let lastStateApp: LastAppStateStore
+
+    @Published var navigationItem: NavigationItem
+
+    init() {
+        self.lastStateApp = LastAppStateStore()
+
+        self.navigationItem = NavigationItem(
+            principalNavigation: .HOME,
+            currentLanguageProject: .C_EXE,
+            selectedProjectName: URL(string: lastStateApp.currentState.lastPathOpened ?? "")?.lastPathComponent ?? "",
+            selectedProjectPath: lastStateApp.currentState.lastPathOpened ?? ""
+        )
+    }
     
     func openProjectPanel() {
         let panel = NSOpenPanel()
+        
         panel.canChooseDirectories = true
         panel.canChooseFiles = false
         panel.allowsMultipleSelection = false
@@ -45,10 +59,9 @@ final class NavigationState: ObservableObject {
     func closeCreateProjectPanel() {
         self.navigationItem.secondaryNavigation = nil
     }
-
-    func clearSelection() {
-        self.navigationItem.selectedProjectPath = ""
-        self.navigationItem.selectedProjectName = ""
+    
+    func saveLastProjectState(path: String?) {
+        lastStateApp.changeState(path: path)
     }
 }
 

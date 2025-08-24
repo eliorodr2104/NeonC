@@ -3,4 +3,4 @@ project({{project_name}} {{language}})
 
 set(CMAKE_C_STANDARD {{standard}})
 
-add_executable({{project_name}} {{source}})
+add_executable({{project_name}} src/{{source}})

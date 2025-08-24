@@ -3,7 +3,6 @@ import SwiftUI
 struct HomeView: View {
     @ObservedObject var navigationState: NavigationState
     @ObservedObject var recentProjectsStore: RecentProjectsStore
-    @ObservedObject var lastStateApp: LastAppStateStore
 
     let defaultsMode: [ModeItem]
     
@@ -18,10 +17,9 @@ struct HomeView: View {
         return "Version \(version) (\(build))"
     }
 
-    init(navigationState: NavigationState, recentProjectsStore: RecentProjectsStore, lastStateApp: LastAppStateStore) {
+    init(navigationState: NavigationState, recentProjectsStore: RecentProjectsStore) {
         self.navigationState = navigationState
         self.recentProjectsStore = recentProjectsStore
-        self.lastStateApp = lastStateApp
         self.defaultsMode = [
             ModeItem(
                 name: "Create A New Project",

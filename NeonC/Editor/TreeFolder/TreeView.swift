@@ -10,9 +10,11 @@ import SwiftUI
 struct DirectoryTreeView: View {
     @StateObject private var rootNode: FileNode
     var onOpenFile: ((URL) -> Void)? = nil
+    var refreshTrigger: Bool
 
-    init(rootURL: URL, onOpenFile: ((URL) -> Void)? = nil) {
+    init(rootURL: URL, refreshTrigger: Bool, onOpenFile: ((URL) -> Void)? = nil) {
         _rootNode = StateObject(wrappedValue: FileNode(url: rootURL))
+        self.refreshTrigger = refreshTrigger
         self.onOpenFile = onOpenFile
         
     }
@@ -29,11 +31,21 @@ struct DirectoryTreeView: View {
         }
         .frame(minWidth: 220)
         .onAppear {
-            if rootNode.isDirectory {
-                rootNode.loadChildren()
-                rootNode.isExpanded = true
-
-            }
+            refresh()
+            
+        }
+        .onChange(of: refreshTrigger) { _, _ in
+            refresh()
         }
     }
+    
+    private func refresh() {
+        guard rootNode.isDirectory else { return }
+
+        rootNode.loadChildrenPreservingState(async: true, forceReload: true)
+
+        rootNode.isExpanded = true
+    }
+
+
 }

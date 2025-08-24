@@ -11,7 +11,6 @@ internal import Combine
 struct ContentView: View {
     
     @ObservedObject var navigationState: NavigationState
-    @ObservedObject var lastStateApp: LastAppStateStore
     @ObservedObject var compilerProfile: CompilerProfileStore
     
     @ObservedObject var recentProjectsStore: RecentProjectsStore
@@ -52,8 +51,7 @@ struct ContentView: View {
             case .HOME:
                 HomeView(
                     navigationState: navigationState,
-                    recentProjectsStore: recentProjectsStore,
-                    lastStateApp: lastStateApp
+                    recentProjectsStore: recentProjectsStore
                 )
                 .onAppear {
                     if compilerProfile.isEmpty() {
@@ -82,6 +80,8 @@ struct ContentView: View {
                     actions: {
                         Button("No", role: .cancel) {
                             navigationState.navigationItem.selectedProjectPath = ""
+                            navigationState.navigationItem.selectedProjectName = ""
+                            
                             navigationState.navigationItem.secondaryNavigation = nil
                         }
                         .buttonStyle(.glass)
@@ -93,16 +93,14 @@ struct ContentView: View {
                             withTransaction(Transaction(animation: nil)) {
                                 appState.setEditorProjectPath(path)
                                 recentProjectsStore.addProject(name: name, path: path)
-                                lastStateApp.changeState(path: path)
+                                
+                                navigationState.saveLastProjectState(path: path)
                             }
 
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
                                 openWindow(id: "editor")
 
-                                DispatchQueue.main.async {
-                                    navigationState.navigationItem.selectedProjectPath = ""
-                                    navigationState.navigationItem.selectedProjectName = ""
-                                    
+                                DispatchQueue.main.async {                                    
                                     dismiss()
                                 }
                             }
@@ -126,6 +124,6 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView(navigationState: NavigationState(), lastStateApp: LastAppStateStore(), compilerProfile: CompilerProfileStore(), recentProjectsStore: RecentProjectsStore())
+    ContentView(navigationState: NavigationState(), compilerProfile: CompilerProfileStore(), recentProjectsStore: RecentProjectsStore())
 }
 

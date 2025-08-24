@@ -112,18 +112,25 @@ final class LanguageStandardsProvider: StandardsProvider, ObservableObject {
 
         let cfg = loadClangCompatFromBundle()
         if let major = clangMajorVersion(), let cfg = cfg {
+            
             if let range = cfg.ranges.first(where: { item in
                 let minOk = major >= item.min
                 let maxOk = item.max.map { major <= $0 } ?? true
+                
                 return minOk && maxOk
+                
             }) {
                 return Array(Set(range.standards)).filter { $0.hasPrefix("c") }.sorted()
+                
             } else {
                 return cfg.default.filter { $0.hasPrefix("c") }
+                
             }
+            
         } else {
             if let cfg = cfg {
                 return cfg.default.filter { $0.hasPrefix("c") }
+                
             }
 
             return ["c90", "c99", "c11", "c17"]
@@ -147,10 +154,8 @@ final class LanguageStandardsProvider: StandardsProvider, ObservableObject {
     }
 
     private func clangMajorVersion() -> Int? {
-        let clangPath = compilerProfile.currentProfile.compilerCPath.isEmpty
-            ? "/usr/bin/clang"
-            : compilerProfile.currentProfile.compilerCPath
-
+        let clangPath = compilerProfile.currentProfile.compilerCPath // Exist path
+        
         let res = runCommand(clangPath, ["--version"])
         let combined = (res.stdout + "\n" + res.stderr).lowercased()
         let pattern = #"clang\s+version\s+([0-9]{1,3})\."#
@@ -183,27 +188,4 @@ final class LanguageStandardsProvider: StandardsProvider, ObservableObject {
         return sorted.map { $0.uppercased() }
     }
 
-    @discardableResult
-    private func runCommand(_ executable: String, _ args: [String]) -> (stdout: String, stderr: String, exitCode: Int32) {
-        let process = Process()
-        process.executableURL = URL(fileURLWithPath: executable)
-        process.arguments = args
-
-        let outPipe = Pipe()
-        let errPipe = Pipe()
-        process.standardOutput = outPipe
-        process.standardError = errPipe
-
-        do { try process.run() } catch {
-            return ("", "\(error)", -1)
-        }
-
-        process.waitUntilExit()
-
-        let outData = outPipe.fileHandleForReading.readDataToEndOfFile()
-        let errData = errPipe.fileHandleForReading.readDataToEndOfFile()
-        let stdout = String(data: outData, encoding: .utf8) ?? ""
-        let stderr = String(data: errData, encoding: .utf8) ?? ""
-        return (stdout, stderr, process.terminationStatus)
-    }
 }

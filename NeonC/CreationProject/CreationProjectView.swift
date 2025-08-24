@@ -61,7 +61,6 @@ struct CreationProjectView: View {
                         await createAction()
                         
                         if let path = urlProject?.path, !path.isEmpty, createError == nil {
-                            navigationState.clearSelection()
                             navigationState.navigationItem.selectedProjectPath = path
                             navigationState.navigationItem.selectedProjectName = viewModel.nameProject
                             navigationState.navigationItem.secondaryNavigation = .CONTROL_OPEN_PROJECT
