@@ -10,7 +10,7 @@ import SwiftUI
 struct SelectTypeProjectView: View {
     @State private var selectedTabIndex: Int = 0
     @ObservedObject var navigationState: NavigationState
-    @State private var currentLanguage: LanguageProject?
+    @State private var currentLanguage: TypeProject?
     
     var body: some View {
         let tabCategoriesProjects = ProjectTemplatesStore.shared.templates
@@ -37,7 +37,7 @@ struct SelectTypeProjectView: View {
             HStack {
                 Button("Cancel") {
                     // Restore selection to initial value and close
-                    currentLanguage = navigationState.navigationItem.currentLanguageProject
+                    currentLanguage = navigationState.navigationItem.selectedLanguageProject
                     // Only request close, let parent dismiss
                     navigationState.closeCreateProjectPanel()
                 }
@@ -47,7 +47,7 @@ struct SelectTypeProjectView: View {
                 
                 Button("Next") {
                     if let lang = currentLanguage {
-                        navigationState.navigationItem.currentLanguageProject = lang
+                        navigationState.navigationItem.selectedLanguageProject = lang
                         navigationState.navigationItem.secondaryNavigation = .CREATE_PROJECT
                     }
                 }
@@ -58,7 +58,7 @@ struct SelectTypeProjectView: View {
         .padding()
         .onAppear {
             if currentLanguage == nil {
-                currentLanguage = navigationState.navigationItem.currentLanguageProject
+                currentLanguage = navigationState.navigationItem.selectedLanguageProject
             }
         }
     }

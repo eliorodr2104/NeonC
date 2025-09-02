@@ -9,6 +9,7 @@ import Foundation
 
 struct LastAppState: Codable {
     
-    let lastPathOpened: String?
+    let lastPathOpened: String
+    let lang: TypeProject
     
 }

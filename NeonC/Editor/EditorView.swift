@@ -39,35 +39,37 @@ struct EditorView: View {
     }
 
     var body: some View {
+        
         NavigationSplitView {
             
-            DirectoryTreeView(
-                rootURL: URL(fileURLWithPath: navigationState.navigationItem.selectedProjectPath),
-                refreshTrigger: treeRefreshTrigger
-                
-            ) { url in
-                selectedFile = url
-            }
-            .onChange(of: editorStatus == .build) { _, newValue in
-                if newValue {
-                    treeRefreshTrigger.toggle()
+            VStack {
+                DirectoryTreeView(
+                    rootURL: URL(fileURLWithPath: navigationState.navigationItem.selectedProjectPath),
+                    refreshTrigger: treeRefreshTrigger,
+                    currentFile: $selectedFile
+                    
+                ) { url in
+                    selectedFile = url
                 }
+                .onChange(of: editorStatus == .build) { _, newValue in
+                    if newValue {
+                        treeRefreshTrigger.toggle()
+                    }
+                }
+                
+                Spacer()
+                
             }
+            .padding(.horizontal, 10)
+            
+            
                                     
         } detail: {
             
+            let projectPath = URL(fileURLWithPath: navigationState.navigationItem.selectedProjectPath)
+            let isEmptyPath = selectedFile == nil
+            
             ZStack {
-                let projectPath = URL(fileURLWithPath: navigationState.navigationItem.selectedProjectPath)
-                let isEmptyPath = selectedFile == nil
-                                
-                if  !isEmptyPath {
-                    ContextView(
-                        compilerProfile: compilerProfile,
-                        projectRoot: projectPath,
-                        selectedFile: selectedFile!
-                    )
-                    
-                }
                 
                 if searchFile || isEmptyPath {
                     
@@ -81,6 +83,14 @@ struct EditorView: View {
                     
                 }
                 
+                if  !isEmptyPath {
+                    ContextView(
+                        compilerProfile: compilerProfile,
+                        projectRoot: projectPath,
+                        selectedFile: selectedFile!
+                    )
+                    
+                }
             }
                 
         }
@@ -88,7 +98,7 @@ struct EditorView: View {
         .onDisappear {
             withTransaction(Transaction(animation: nil)) {
                 appState.setEditorProjectPath(nil)
-                navigationState.saveLastProjectState(path: nil)
+                navigationState.saveLastProjectState(path: "", lang: .C_EXE)
             }
             
             DispatchQueue.main.async {
@@ -159,41 +169,87 @@ struct EditorView: View {
             // Center Section for view current file working and search file
             ToolbarItemGroup(placement: .principal) {
                 HStack {
-                    HStack {
+                    HStack(spacing: 5) {
+                        Image(systemName: "desktopcomputer")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                        
                         Text(navigationState.navigationItem.selectedProjectName)
+                            .font(.subheadline)
+                            .foregroundStyle(.primary)
+                            .lineLimit(1)
+                            .truncationMode(.middle)
+                            .layoutPriority(1)
                         
-                        Spacer(minLength: 80)
+                        if selectedFile != nil {
+                            
+                            Image(systemName: "chevron.right")
+                                .font(.subheadline)
+                                .foregroundStyle(.primary)
+                            
+                            Text(selectedFile!.lastPathComponent)
+                                .font(.subheadline)
+                                .foregroundStyle(.primary)
+                                .lineLimit(1)
+                                .truncationMode(.middle)
+                                .layoutPriority(1)
+                            
+                        }
                         
-                        let projectName = navigationState.navigationItem.selectedProjectName
-                        switch editorStatus {
+                    }
+                    
+                    Spacer(minLength: 100)
+                    
+                    let projectName = navigationState.navigationItem.selectedProjectName
+                    switch editorStatus {
                         case .readyToBuild:
                             Text("\(projectName) is ready to build")
+                            .font(.subheadline)
+                            .fontWeight(.light)
+                        
                         case .building:
                             Text("\(projectName) is building")
+                            .font(.subheadline)
+                            .fontWeight(.light)
+                        
                         case .build:
                             Text("\(projectName) is build")
+                            .font(.subheadline)
+                            .fontWeight(.light)
+                        
                         case .running:
                             Text("\(projectName) is running")
+                            .font(.subheadline)
+                            .fontWeight(.light)
+                        
                         case .stopped:
                             Text("Finished running \(projectName)")
-                        }
+                            .font(.subheadline)
+                            .fontWeight(.light)
+                            
                     }
-                    .padding(10)
-                    .glassEffect()
-                    
-                    // Search button
-                    Button {
-                        withAnimation(.spring()) {
-                            if selectedFile != nil { searchFile.toggle() }
-                        }
-                        
-                    } label: {
-                        Image(systemName: "magnifyingglass")
-                            .font(.system(size: 15))
-                    }
-                    .frame(width: 35.0, height: 35.0)
-                    .buttonStyle(.glass)
                 }
+                .padding(12)
+                .glassEffect()
+          
+                // Search button
+                Button {
+                    withAnimation(.spring()) {
+                        if selectedFile != nil { searchFile.toggle() }
+                    }
+                    
+                } label: {
+                    Image(systemName: "magnifyingglass")
+                        .font(.system(size: 15))
+                        .frame(width: 35, height: 35)
+                        .contentShape(Circle())
+                    
+                }
+                .buttonStyle(.plain)
+                .glassEffect(in: .circle)
+                .clipShape(Circle())
+                .padding(.leading, 20)
+                
             }
             .sharedBackgroundVisibility(.hidden)
             

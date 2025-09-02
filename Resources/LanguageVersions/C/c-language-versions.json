@@ -5,16 +5,20 @@
       "max": 12,
       "standards": ["c90","c99","c11"]
     },
+    
     {
       "min": 13,
       "max": 14,
       "standards": ["c90","c99","c11","c17"]
     },
+    
     {
       "min": 15,
       "max": null,
       "standards": ["c90","c99","c11","c17","c23"]
     }
+    
   ],
+  
   "default": ["c90","c99","c11","c17"]
 }

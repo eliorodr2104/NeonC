@@ -89,12 +89,13 @@ struct ContentView: View {
                         Button("Yes") {
                             let path = navigationState.navigationItem.selectedProjectPath
                             let name = navigationState.navigationItem.selectedProjectName
+                            let lang = navigationState.navigationItem.selectedLanguageProject
 
                             withTransaction(Transaction(animation: nil)) {
                                 appState.setEditorProjectPath(path)
-                                recentProjectsStore.addProject(name: name, path: path)
+                                recentProjectsStore.addProject(name: name, path: path, language: lang)
                                 
-                                navigationState.saveLastProjectState(path: path)
+                                navigationState.saveLastProjectState(path: path, lang: lang)
                             }
 
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {

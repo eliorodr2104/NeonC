@@ -43,7 +43,7 @@ final class CodeEditorViewModel: ObservableObject {
             }
             .store(in: &cancellables)
 
-        lspClient?.openDocument(uri: documentURI.absoluteString, languageId: language.lspID, text: textView?.string ?? "")
+        lspClient?.openDocument(uri: documentURI.absoluteString, languageId: language.langId, text: textView?.string ?? "")
         
     }
 

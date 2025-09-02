@@ -7,23 +7,13 @@
 
 import SwiftUI
 import AppKit
+import UniformTypeIdentifiers
 internal import Combine
 
 struct FileItem: Identifiable, Equatable {
     let id = UUID()
     let name: String
     let url: URL
-}
-
-struct FileIconView: View {
-    let url: URL
-    var body: some View {
-        let nsImage = NSWorkspace.shared.icon(forFile: url.path)
-        Image(nsImage: nsImage)
-            .resizable()
-            .aspectRatio(contentMode: .fit)
-            .frame(width: 24, height: 24)
-    }
 }
 
 class FileSearchViewModel: ObservableObject {
@@ -71,3 +61,4 @@ class FileSearchViewModel: ObservableObject {
         }
     }
 }
+

@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum LanguageProject: String, Codable {
+enum TypeProject: String, Codable {
     case C_EXE
     case C_LIB
     case CPP_EXE
@@ -16,5 +16,13 @@ enum LanguageProject: String, Codable {
     case CUDA_LIB
     case QT_EXE
     case QT_WIDG_EXE
+    
+    var projectExtension: String {
+        switch self {
+        case .C_EXE, .C_LIB: return "c"
+        case .CPP_EXE, .CPP_LIB, .QT_EXE, .QT_WIDG_EXE: return "cpp"
+        case .CUDA_EXE, .CUDA_LIB: return "cu"
+        }
+    }
     
 }

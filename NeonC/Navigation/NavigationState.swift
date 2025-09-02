@@ -20,9 +20,9 @@ final class NavigationState: ObservableObject {
 
         self.navigationItem = NavigationItem(
             principalNavigation: .HOME,
-            currentLanguageProject: .C_EXE,
-            selectedProjectName: URL(string: lastStateApp.currentState.lastPathOpened ?? "")?.lastPathComponent ?? "",
-            selectedProjectPath: lastStateApp.currentState.lastPathOpened ?? ""
+            selectedLanguageProject: lastStateApp.currentState.lang,
+            selectedProjectName: URL(string: lastStateApp.currentState.lastPathOpened)?.lastPathComponent ?? "",
+            selectedProjectPath: lastStateApp.currentState.lastPathOpened
         )
     }
     
@@ -60,8 +60,8 @@ final class NavigationState: ObservableObject {
         self.navigationItem.secondaryNavigation = nil
     }
     
-    func saveLastProjectState(path: String?) {
-        lastStateApp.changeState(path: path)
+    func saveLastProjectState(path: String, lang: TypeProject) {
+        lastStateApp.changeState(path: path, lang: lang)
     }
 }
 

@@ -8,9 +8,10 @@
 import SwiftUI
 
 struct ProjectRow: View {
-    let project: RecentProject
+    let project : RecentProject
     var onSelect: () -> Void
     var onDelete: () -> Void
+    let lang    : TypeProject
 
     @State private var isHovering = false
 
@@ -19,18 +20,11 @@ struct ProjectRow: View {
         Button(action: onSelect) {
             HStack(spacing: 10) {
                 
-                ZStack {
-                    // Add color system for varius project Type
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(.primary.opacity(0.10))
-                        .frame(width: 45, height: 45)
-                    
-                    Image(systemName: "folder")
-                        .foregroundStyle(.placeholder)
-                        .font(.title3)
-                        .padding(.vertical, 6)
-                    
-                }
+                // Senza di me -- Gemitaiz && Franco126
+                Image(nsImage: IconCache.shared.icon(for: nil, lang: lang))
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 32, height: 32)
                 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(project.name)
@@ -43,27 +37,6 @@ struct ProjectRow: View {
                         .lineLimit(1)
                         .truncationMode(.middle)
                     
-                    HStack {
-                        
-                        Image(systemName: "calendar")
-                            .foregroundStyle(.placeholder)
-                            .font(.headline)
-                            .padding(.vertical, 6)
-                        
-                        Text("add last openened! ")
-                            .font(.headline)
-                            .foregroundStyle(.primary)
-                        
-                        ZStack {
-                            Capsule()
-                                .fill(.primary.opacity(0.10))
-                                .frame(width: 35, height: 25)
-                            
-                            Image("c")
-                                .font(.headline)
-                                .padding(.vertical, 6)
-                        }
-                    }
                 }
                 
                 Spacer()
@@ -77,15 +50,9 @@ struct ProjectRow: View {
                 .opacity(isHovering ? 1 : 0)
             }
         }
+        .padding()
         .buttonStyle(.plain)
-        .background(
-            RoundedRectangle(cornerRadius: 15)
-                .fill(isHovering ? .accentColor.opacity(0.08) : Color.clear)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 15)
-                        .strokeBorder(isHovering ? .accentColor.opacity(0.02) : Color.clear, lineWidth: 1)
-                )
-        )
+        .background(interactiveBackground)
         .clipShape(RoundedRectangle(cornerRadius: 15))
         .onHover { hovering in
             withAnimation(.easeInOut(duration: 0.15)) {
@@ -93,6 +60,35 @@ struct ProjectRow: View {
             }
         }
         
+    }
+    
+    private var interactiveBackground: some View {
+        RoundedRectangle(cornerRadius: 15)
+            .fill(backgroundFill)
+            .overlay(
+                RoundedRectangle(cornerRadius: 15)
+                    .strokeBorder(borderColor, lineWidth: 1)
+            )
+    }
+
+    private var backgroundFill: Color {
+        if isHovering {
+            return .accentColor.opacity(0.10)
+            
+        } else {
+            return .secondary.opacity(0.12)
+            
+        }
+    }
+
+    private var borderColor: Color {
+        if isHovering {
+            return .accentColor.opacity(0.2)
+            
+        } else {
+            return .clear
+            
+        }
     }
 }
 

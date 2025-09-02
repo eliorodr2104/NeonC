@@ -9,8 +9,7 @@ struct NavigationItem: Hashable {
     var principalNavigation: NavigationEnum
     var secondaryNavigation: SecondaryNavigationEnum?
     
-    var currentLanguageProject: LanguageProject
-    
+    var selectedLanguageProject: TypeProject
     var selectedProjectName: String
     var selectedProjectPath: String
 }

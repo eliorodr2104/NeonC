@@ -11,6 +11,7 @@ struct RecentProject: Identifiable, Codable, Equatable {
     var id: String { path }
     let name: String
     let path: String
+    let language: TypeProject
 
     static func == (lhs: RecentProject, rhs: RecentProject) -> Bool {
         lhs.path == rhs.path

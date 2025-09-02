@@ -9,6 +9,8 @@ import SwiftUI
 
 struct DirectoryRow: View {
     @ObservedObject var node: FileNode
+    
+    @Binding var currentFile: URL?
     var level: Int
     var onOpenFile: ((URL) -> Void)? = nil
 
@@ -42,19 +44,13 @@ struct DirectoryRow: View {
                         
                     }
 
-                    if let icon = node.icon {
-                        icon
-                            .resizable()
-                            .frame(width: 14, height: 14)
-                        
-                    } else {
-                        Image(systemName: node.isDirectory ? "folder" : "doc.text")
-                            .frame(width: 14, height: 14)
-                        
-                    }
+                    Image(nsImage: IconCache.shared.icon(for: node.url, lang: nil))
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 18, height: 18)
 
                     Text(node.name.isEmpty ? node.url.path : node.name)
-                        .font(.system(size: 13))
+                        .font(.headline)
                         .lineLimit(1)
                     
                     Spacer()
@@ -63,13 +59,15 @@ struct DirectoryRow: View {
                 .padding(.vertical, 6)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .contentShape(Rectangle())
+                
 
             }
-            .buttonStyle(PlainButtonStyle())
+            .buttonStyle(.plain)
+            .background(currentFile == node.url ? Color.secondary.opacity(0.1) : Color.clear, in: .rect(cornerRadius: 12))
             
             if node.isDirectory && node.isExpanded {
                 ForEach(node.children) { child in
-                    DirectoryRow(node: child, level: level + 1, onOpenFile: onOpenFile)
+                    DirectoryRow(node: child, currentFile: $currentFile, level: level + 1, onOpenFile: onOpenFile)
                 }
             }
         }

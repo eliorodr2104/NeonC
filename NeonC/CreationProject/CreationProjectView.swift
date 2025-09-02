@@ -91,7 +91,7 @@ struct CreationProjectView: View {
     }
 
     private func mapProjectKind(from navigationState: NavigationState) -> ProjectKind {
-        switch navigationState.navigationItem.currentLanguageProject {
+        switch navigationState.navigationItem.selectedLanguageProject {
             case .C_EXE:     return .cExe
             case .C_LIB:     return .cLib
             case .CPP_EXE:   return .cppExe

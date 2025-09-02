@@ -43,10 +43,10 @@ struct HomeView: View {
     }
 
     var body: some View {
-        HStack(spacing: 30) {
+        HStack() {
 
             VStack(
-                alignment: .leading, spacing: 35
+                alignment: .leading, spacing: 25
             ) {
                 HStack {
                     Image(nsImage: icon)
@@ -54,13 +54,13 @@ struct HomeView: View {
                         .frame(width: 80, height: 80)
                         .shadow(color: glowColor.opacity(0.6), radius: 12, x: 0, y: 0)
                         .onAppear {
-                            
                             if !computedAverage {
                                 computedAverage = true
                                 computeAverageColor(of: icon) { nsColor in
                                     DispatchQueue.main.async {
                                         if let nsColor = nsColor {
                                             self.glowColor = Color(nsColor)
+                                            
                                         } else {
                                             self.glowColor = .white
                                         }
@@ -87,18 +87,24 @@ struct HomeView: View {
                     }
                 }
                 
+                Spacer()
+                
                 Text("NeonC • \(appVersionString)")
                     .font(.footnote)
                     .foregroundStyle(.tertiary)
-                    .padding(.horizontal, 12)
-                    .padding(.bottom, 8)
+                    .padding(.leading, 12)
+                
             }
-            .padding(.leading, 25)
-            .frame(minWidth: 300, maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+            .padding()
+            .frame(minWidth: 400, maxWidth: 400, maxHeight: .infinity, alignment: .leading)
+            .glassEffect(in: .rect(cornerRadius: 26))
+            
+            Spacer()
 
             RightMenuView(navigationState: navigationState, recentProjectsStore: recentProjectsStore)
+
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding(10)
+        .padding(15)
     }
 }

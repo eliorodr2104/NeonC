@@ -26,25 +26,27 @@ class RecentProjectsStore: ObservableObject {
 
         do {
             try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+            
         } catch {
             print("Erorr to create StateIDE folder: ", error)
+            
         }
 
         self.fileURL = folder.appendingPathComponent("recent-projects.json")
         load()
     }
 
-    func addProject(name: String, path: String) {
-        let project = RecentProject(name: name, path: path)
+    func addProject(name: String, path: String, language: TypeProject) {
+        let project = RecentProject(name: name, path: path, language: language)
 
-        // Rimuove eventuale duplicato
+        // Remove duplicate
         if let existingIndex = projects.firstIndex(where: { $0.path == path }) {
             projects.remove(at: existingIndex)
         }
 
         projects.insert(project, at: 0)
 
-        // Limita alla quantità massima
+        // Limit array to max quantity
         if projects.count > maxProjects {
             projects = Array(projects.prefix(maxProjects))
         }
@@ -59,11 +61,14 @@ class RecentProjectsStore: ObservableObject {
 
     private func load() {
         guard let data = try? Data(contentsOf: fileURL) else { return }
+        
         do {
             let loaded = try JSONDecoder().decode([RecentProject].self, from: data)
             self.projects = loaded
+            
         } catch {
             print("Error load recent-projects file: ", error)
+            
         }
     }
 

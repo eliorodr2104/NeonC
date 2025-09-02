@@ -14,30 +14,15 @@ struct RightMenuView: View {
     @ObservedObject var recentProjectsStore: RecentProjectsStore
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            HeaderPanelView()
+        ProjectListView(
+            projects: recentProjectsStore.projects,
+            onSelect: handleProjectSelection,
+            onDelete: handleProjectDeletion,
             
-            if recentProjectsStore.projects.isEmpty {
-                Spacer()
-                
-            } else {
-                ProjectListView(
-                    projects: recentProjectsStore.projects,
-                    onSelect: handleProjectSelection,
-                    onDelete: handleProjectDeletion
-                )
-            }
-        }
-        .background(backgroundView)
-        .frame(minWidth: 350, idealWidth: 350, maxWidth: 550, maxHeight: .infinity, alignment: .topLeading)
+        )
+        .frame(minWidth: 300, maxWidth: 300, maxHeight: .infinity, alignment: .trailing)
     }
         
-    private var backgroundView: some View {
-        RoundedRectangle(cornerRadius: 26)
-            .fill(.ultraThinMaterial)
-            .shadow(color: .black.opacity(0.2), radius: 24, x: 0, y: 8)
-    }
-    
     private func handleProjectSelection(_ project: RecentProject) {
        
         navigationState.navigationItem.selectedProjectPath = project.path
